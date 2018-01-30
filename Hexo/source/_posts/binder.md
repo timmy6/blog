@@ -282,4 +282,5 @@ Client进程根据获取到的Service信息(Binder代理对象)，通过Binder�
   1.采用Client/Server架构。
   2.实现面向对象的调用方式，即在使用Binder时，就和调用本地对象实例一样。
 
-** [GitHub Demo 链接点击此处.](https://github.com/timmy6/BinderSample) **
+** [GitHub Demo1 链接点击此处.](https://github.com/timmy6/BinderDemo) **
+** [GitHub Demo2 链接点击此处.](https://github.com/timmy6/BinderSample) **
