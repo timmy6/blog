@@ -284,3 +284,4 @@ Client进程根据获取到的Service信息(Binder代理对象)，通过Binder�
 
 ** [GitHub Demo1 链接点击此处.](https://github.com/timmy6/BinderDemo) **
 ** [GitHub Demo2 链接点击此处.](https://github.com/timmy6/BinderSample) **
+** [推荐阅读：彻底理解Android Binder通信架构](http://gityuan.com/2016/09/04/binder-start-service/) **
