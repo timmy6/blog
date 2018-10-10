@@ -75,3 +75,12 @@ category: iOS开发
 我们将UIViewController的init方法中访问的实例变量view在init中将背景设置为黄色，运行程序，我们能发现背景的确变成了黄色，但是，在我们还没有需要使用视图的时候，该视图已经加载好了，在UIViewController的初始方法中访问实例变量view，会导致延迟载入机制失效，这个问题看上去不是很严重，但是如果考虑到内存过低警告，那么问题就大了。。。
 运行程序，选择模拟器中的硬件－>模拟内存过低警告，我们会发现，原本设置的黄色背景不见了，这是因为，内存过低，视图控制对象会在发出内存过低警告时收到didReceiveMemoryWarning消息，该方法默认实现，检查视图控制对象的视图是否可见，如果不可见，则释放掉，下次在加载该视图时就不会执行init方法，而是只执行viewDidLoad方法，所以需要将[[selfview ] setBackgroundColor:[UIColoryellowColor]];放到viewDidLoad中，这样如果视图因为内存过低被释放掉了，下次需要使用到该视图的时候，程序会默认取执行该视图的viewDidLoad方法，这样背景颜色就又出来了。
 
+
+#### 6.设置两个View居中对齐
+```objc
+view1.center = view2.center;    //设置了之后，可以不用设置view1的x和y.
+```
+
+#### 7.weak和assign修饰符的区别
+* 相同点 :  都是弱引用声明类型
+* 不同点：如果用weak声明的变量在栈中会自动清空，赋值为nil。如果用assign声明的变量在栈中可能不会自动赋值为nil，就会造成野指针错误。
