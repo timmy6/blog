@@ -84,3 +84,36 @@ view1.center = view2.center;    //设置了之后，可以不用设置view1的x�
 #### 7.weak和assign修饰符的区别
 * 相同点 :  都是弱引用声明类型
 * 不同点：如果用weak声明的变量在栈中会自动清空，赋值为nil。如果用assign声明的变量在栈中可能不会自动赋值为nil，就会造成野指针错误。
+
+#### 8.layoutSubviews在以下情况会被调用
+- init初始化不会触发layoutSubviews.
+- addSubview会触发layoutSubviews.
+- 设置view的Frame会触发layoutSubViews，当然前提是Frame的值前后发生了变化.
+- 滚动一个UIScrollView会触发layoutSubviews
+- 旋转Screen会触发父UIView上的layoutSubviews
+- 改变一个UIView大小的时候，也会触发父UIView上的layoutSubviews事件。
+- 直接调用setLayoutSubViews.
+
+#### 9.Block的用法
+~ Block是iOS开发中一种比较特殊的数据结构，它可以保存一段代码，在合适的地方再调用，具有语法简介、回调方便、变成思路清晰、执行高效率等优点。
+
+1.Block定义及使用
+```objc
+返回值类型 (^block变量名)(形参列表) = ^(形参列表) {
+
+};
+
+//调用Block保存的代码
+block变量名(实参);
+```
+
+2.在项目中使用格式(一般声明在@interface之外).
+在项目中，通常会重新定义Block的类型的别名，然后用别名来定义Block的类型
+```objc
+//定义block类型
+typedef void (^Block)(int);
+//定义block
+Block block = ^(int a){};
+//调用block
+block(3);
+```
