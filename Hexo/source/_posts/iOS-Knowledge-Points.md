@@ -117,3 +117,37 @@ Block block = ^(int a){};
 //调用block
 block(3);
 ```
+
+#### 10.UITableViewCell高度设置
+设置UITableView高度，有两种方式：
+第一种：
+```objc
+self.tableView.rowHeight = 88;
+```
+
+第二种:是实现UITableViewDelegate中的
+
+```objc
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    // return xxx
+}
+```
+第一种方式指定了UITableView的cell高度为88，对于固定高度的cell，**强烈建议**使用这种，而非第二种，可以保证不必要的高度计算和调用。rowHeight属性的默认值是44，所以一个空的UITableView显示成那个样子。需要注意的是，实现了第二种方法后，rowHeight的设置将无效。所以，第二种方法适用于具有多种cell高度的UITableView。
+
+#### 11.UITableView的estimatedRowHeight
+这个属性 iOS7 就出现了， 文档是这么描述它的作用的：
+> If the table contains variable height rows, it might be expensive to calculate all their heights when the table loads. Using estimation allows you to defer some of the cost of geometry calculation from load time to scrolling time.
+
+恩，听上去蛮靠谱的。我们知道，UITableView 是个 UIScrollView，就像平时使用 UIScrollView 一样，加载时指定 contentSize 后它才能根据自己的 bounds、contentInset、contentOffset 等属性共同决定是否可以滑动以及滚动条的长度。而 UITableView 在一开始并不知道自己会被填充多少内容，于是询问 data source 个数和创建 cell，同时询问 delegate 这些 cell 应该显示的高度，这就造成它在加载的时候浪费了多余的计算在屏幕外边的 cell 上。和上面的 rowHeight 很类似，设置这个估算高度有两种方法：
+```objc
+self.tableView.estimatedRowHeight = 88;
+// or
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    // return xxx
+}
+```
+有所不同的是，即使面对种类不同的 cell，我们依然可以使用简单的 estimatedRowHeight 属性赋值，只要整体估算值接近就可以，比如大概有一半 cell 高度是 44， 一半 cell 高度是 88， 那就可以估算一个 66，基本符合预期。
+说完了估算高度的基本使用，可以开始吐槽了：
+- 设置估算高度后，contentSize.height 根据“cell估算值 x cell个数”计算，这就导致滚动条的大小处于不稳定的状态，contentSize 会随着滚动从估算高度慢慢替换成真实高度，肉眼可见滚动条突然变化甚至“跳跃”。
+- 若是有设计不好的下拉刷新或上拉加载控件，或是 KVO 了 contentSize 或 contentOffset 属性，有可能使表格滑动时跳动。
+- 估算高度设计初衷是好的，让加载速度更快，那凭啥要去侵害滑动的流畅性呢，用户可能对进入页面时多零点几秒加载时间感觉不大，但是滑动时实时计算高度带来的卡顿是明显能体验到的，个人觉得还不如一开始都算好了呢（iOS8更过分，即使都算好了也会边划边计算）
